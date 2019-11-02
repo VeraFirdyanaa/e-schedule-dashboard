@@ -7,7 +7,11 @@ import {
   CardHeader,
   Table,
   ButtonGroup,
-  Button
+  Button,
+  CardFooter,
+  Pagination,
+  PaginationItem,
+  PaginationLink
 } from "reactstrap";
 
 import Header from "components/Headers/Header.jsx";
@@ -19,6 +23,7 @@ class Lecture extends Component {
   state = {
     lectures: [],
     total: 0,
+    totalPage: 1,
     loading: false
   }
 
@@ -29,10 +34,11 @@ class Lecture extends Component {
   getLectures = () => {
     API.get("api/lectures")
       .then(res => {
-        console.log('res', res);
+        let total_page = res.data.total / 10;
         this.setState({
           lectures: res.data.lectures,
-          total: res.data.total
+          total: res.data.total,
+          totalPage: Math.ceil(total_page)
         });
       })
       .catch(err => {
@@ -40,7 +46,26 @@ class Lecture extends Component {
       });
   }
 
+  deleteLecture = id => {
+    let answer = window.confirm('Are you sure want to delete this Lecture ?');
+
+    if (answer) {
+      API.delete("api/lectures/" + id)
+        .then(res => {
+          console.log('res', res);
+          alert('Data Berhasil Di Hapus')
+          this.getLectures();
+        })
+        .catch(err => {
+          console.log('err', err);
+          alert('Data Gagal Di Hapus');
+        });
+    }
+  }
+
   render() {
+    let pages = new Array(this.state.totalPage);
+    console.log(pages.length);
     return (
       <>
         <Header noStats={true} />
@@ -81,12 +106,12 @@ class Lecture extends Component {
                         <td><img src={lecture.photo} style={{ width: 60, height: 60 }} alt="Foto Dosen" /></td>
                         <td>
                           <ButtonGroup>
-                            <Button className="btn-icon btn-2" color="info" type="button">
+                            <Button className="btn-icon btn-2" color="info" type="button" onClick={() => this.props.history.push({ pathname: '/admin/lectures/edit/' + lecture._id })}>
                               <span className="btn-inner--icon">
                                 <i className="fas fa-pen" />
                               </span>
                             </Button>
-                            <Button className="btn-icon btn-2" color="danger" type="button">
+                            <Button className="btn-icon btn-2" color="danger" type="button" onClick={() => this.deleteLecture(lecture._id)}>
                               <span className="btn-inner--icon">
                                 <i className="fas fa-trash" />
                               </span>
@@ -98,6 +123,44 @@ class Lecture extends Component {
                     )}
                   </tbody>
                 </Table>
+                <CardFooter className="py-4">
+                  <nav aria-label="...">
+                    <Pagination
+                      className="pagination justify-content-end mb-0"
+                      listClassName="justify-content-end mb-0"
+                    >
+                      <PaginationItem className="disabled">
+                        <PaginationLink
+                          href="#"
+                          onClick={e => e.preventDefault()}
+                          tabIndex="-1"
+                        >
+                          <i className="fas fa-angle-left" />
+                          <span className="sr-only">Previous</span>
+                        </PaginationLink>
+                      </PaginationItem>
+                      <PaginationItem className="active">
+                        {/* {pages.map((p, i) => ( */}
+                        <PaginationLink
+                          href="#"
+                          onClick={e => e.preventDefault()}
+                        >
+                          {1}
+                        </PaginationLink>
+                        {/* ))} */}
+                      </PaginationItem>
+                      <PaginationItem>
+                        <PaginationLink
+                          href="#"
+                          onClick={e => e.preventDefault()}
+                        >
+                          <i className="fas fa-angle-right" />
+                          <span className="sr-only">Next</span>
+                        </PaginationLink>
+                      </PaginationItem>
+                    </Pagination>
+                  </nav>
+                </CardFooter>
               </Card>
             </div>
           </Row>
