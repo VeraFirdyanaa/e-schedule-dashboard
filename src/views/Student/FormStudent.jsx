@@ -23,11 +23,11 @@ import ReactDatetime from 'react-datetime';
 import ImageUploader from 'react-images-upload';
 import moment from 'moment';
 
-class FormLecture extends Component {
+class FormStudent extends Component {
 
   state = {
     loading: false,
-    nid: '',
+    npm: '',
     name: '',
     pob: '',
     dob: '',
@@ -47,11 +47,11 @@ class FormLecture extends Component {
         isEdit: true,
         id: this.props.match.params.id
       }, () => {
-        API.get("api/lectures/" + this.props.match.params.id)
+        API.get("api/students/" + this.props.match.params.id)
           .then(res => {
             console.log('res', res);
             this.setState({
-              nid: res.data.nid,
+              npm: res.data.npm,
               name: res.data.name,
               pob: res.data.pob,
               dob: moment(res.data.dob),
@@ -60,7 +60,7 @@ class FormLecture extends Component {
           })
           .catch(err => {
             console.log('err', err);
-            alert('err to get detail Lecture');
+            alert('err to get detail Student');
           })
       });
     }
@@ -111,8 +111,8 @@ class FormLecture extends Component {
         submitting: true
       }, () => {
         if (!this.state.isEdit) {
-          API.post("api/lectures", {
-            nid: this.state.nid,
+          API.post("api/students", {
+            npm: this.state.npm,
             name: this.state.name,
             pob: this.state.pob,
             dob: this.state.dob,
@@ -126,18 +126,18 @@ class FormLecture extends Component {
               });
               console.log('res', res);
               alert('Data Berhasil Disimpan!');
-              this.props.history.push('/admin/lectures');
+              this.props.history.push('/admin/students');
             })
             .catch(err => {
               this.setState({
                 submitting: false
               });
               console.log('err', err);
-              alert('Error Creating Lecture');
+              alert('Error Creating Student');
             });
         } else {
-          API.put("api/lectures/" + this.state.id, {
-            nid: this.state.nid,
+          API.put("api/students/" + this.state.id, {
+            npm: this.state.npm,
             name: this.state.name,
             pob: this.state.pob,
             dob: this.state.dob,
@@ -149,14 +149,14 @@ class FormLecture extends Component {
               });
               console.log('res', res);
               alert('Data Berhasil Disimpan!');
-              this.props.history.push('/admin/lectures');
+              this.props.history.push('/admin/students');
             })
             .catch(err => {
               this.setState({
                 submitting: false
               });
               console.log('err', err);
-              alert('Error Creating Lecture');
+              alert('Error Creating Student');
             });
         }
       });
@@ -164,14 +164,14 @@ class FormLecture extends Component {
   }
 
   render() {
-    let photoDosen = null;
+    let photoMahasiswa = null;
 
     if (this.state.photoSelected && !this.state.photo) {
-      photoDosen = <Spinner type="grow" color="danger" />
+      photoMahasiswa = <Spinner type="grow" color="danger" />
     }
 
     if (this.state.photoSelected && this.state.photo) {
-      photoDosen = <img src={this.state.photo} alt="Foto Dosen" style={{ width: 100, height: 100 }} />
+      photoMahasiswa = <img src={this.state.photo} alt="Foto Mahasiswa" style={{ width: 100, height: 100 }} />
     }
 
     return (
@@ -182,19 +182,19 @@ class FormLecture extends Component {
             <div className="col">
               <Card className="shadow">
                 <CardHeader className="border-0">
-                  <h3 className="mb-0">{this.state.isEdit ? 'Edit' : 'New'} Lecture</h3>
+                  <h3 className="mb-0">{this.state.isEdit ? 'Edit' : 'New'} Student</h3>
                 </CardHeader>
                 <Form>
                   <FormGroup row style={{ marginLeft: 10 }}>
-                    <Label htmlFor="nid" md={2}>NID</Label>
+                    <Label htmlFor="npm" md={2}>NPM</Label>
                     <Col md={9}>
-                      <Input type="text" placeholder="Nomor Induk Dosen" name="nid" onChange={this.handleChange} value={this.state.nid} />
+                      <Input type="text" placeholder="NPM" name="npm" onChange={this.handleChange} value={this.state.npm} />
                     </Col>
                   </FormGroup>
                   <FormGroup row style={{ marginLeft: 10 }}>
                     <Label htmlFor="name" md={2}>Name</Label>
                     <Col md={9}>
-                      <Input type="text" placeholder="Nama Dosen" name="name" onChange={this.handleChange} value={this.state.name} />
+                      <Input type="text" placeholder="Nama Mahasiswa" name="name" onChange={this.handleChange} value={this.state.name} />
                     </Col>
                   </FormGroup>
                   <FormGroup row style={{ marginLeft: 10 }}>
@@ -241,7 +241,7 @@ class FormLecture extends Component {
                           <Col md={9}>
                             {
                               this.state.photoSelected ? (
-                                <div>{photoDosen}</div>
+                                <div>{photoMahasiswa}</div>
                               ) : (
                                   < ImageUploader
                                     withIcon={true}
@@ -284,4 +284,4 @@ class FormLecture extends Component {
   }
 }
 
-export default FormLecture;
+export default FormStudent;

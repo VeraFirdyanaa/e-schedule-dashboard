@@ -8,18 +8,18 @@ import {
   Table,
   ButtonGroup,
   Button,
-  CardFooter
+  CardFooter,
 } from "reactstrap";
 
 import Header from "components/Headers/Header.jsx";
+import PaginationComponent from "components/Pagination/PaginationComponent.jsx";
 import API from '../../utils/Api';
 import moment from 'moment';
-import PaginationComponent from "components/Pagination/PaginationComponent.jsx";
 
-class Lecture extends Component {
+class Student extends Component {
 
   state = {
-    lectures: [],
+    students: [],
     total: 0,
     totalPage: 1,
     perPage: 10,
@@ -28,15 +28,15 @@ class Lecture extends Component {
   }
 
   componentDidMount() {
-    this.getLectures();
+    this.getStudents();
   }
 
-  getLectures = () => {
-    API.get(`api/lectures?page=${this.state.page}&limit=${this.state.perPage}`)
+  getStudents = () => {
+    API.get(`api/students?page=${this.state.page}&limit=${this.state.perPage}`)
       .then(res => {
         let total_page = res.data.total / 10;
         this.setState({
-          lectures: res.data.lectures,
+          students: res.data.students,
           total: res.data.total,
           totalPage: Math.ceil(total_page)
         });
@@ -49,18 +49,18 @@ class Lecture extends Component {
   changePage = page => {
     this.setState({
       page: page
-    }, () => this.getLectures());
+    }, () => this.getStudents());
   }
 
-  deleteLecture = id => {
-    let answer = window.confirm('Are you sure want to delete this Lecture ?');
+  deleteStudent = id => {
+    let answer = window.confirm('Are you sure want to delete this Student ?');
 
     if (answer) {
-      API.delete("api/lectures/" + id)
+      API.delete("api/students/" + id)
         .then(res => {
           console.log('res', res);
           alert('Data Berhasil Di Hapus')
-          this.getLectures();
+          this.getStudents();
         })
         .catch(err => {
           console.log('err', err);
@@ -82,17 +82,17 @@ class Lecture extends Component {
                 <CardHeader className="border-0">
                   <Row className="align-items-center">
                     <div className="col">
-                      <h3 className="mb-0">Lecture List</h3>
+                      <h3 className="mb-0">Student List</h3>
                     </div>
                     <div className="col text-right">
-                      <Button size="sm" color="success" onClick={() => this.props.history.push('/admin/lectures/create')}>New <i className="fas fa-plus"></i></Button>
+                      <Button color="success" onClick={() => this.props.history.push('/admin/students/create')} size="sm">New <i className="fas fa-plus"></i></Button>
                     </div>
                   </Row>
                 </CardHeader>
                 <Table className="align-items-center table-flush" responsive>
                   <thead className="thead-light">
                     <tr>
-                      <th scope="col">NID</th>
+                      <th scope="col">NPM</th>
                       <th scope="col">Name</th>
                       <th scope="col">Date Of Birth</th>
                       <th scope="col">Place of Birth</th>
@@ -102,22 +102,22 @@ class Lecture extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.lectures.map(lecture => (
-                      <tr key={lecture._id}>
-                        <td>{lecture.nid}</td>
-                        <td>{lecture.name}</td>
-                        <td>{moment(lecture.dob).format("DD/MM/YYYY")}</td>
-                        <td>{lecture.pob}</td>
-                        <td style={{ textTransform: 'capitalize' }}>{lecture.gender}</td>
-                        <td><img src={lecture.photo} style={{ width: 60, height: 60 }} alt="Foto Dosen" /></td>
+                    {this.state.students.map(student => (
+                      <tr key={student._id}>
+                        <td>{student.npm}</td>
+                        <td>{student.name}</td>
+                        <td>{moment(student.dob).format("DD/MM/YYYY")}</td>
+                        <td>{student.pob}</td>
+                        <td style={{ textTransform: 'capitalize' }}>{student.gender}</td>
+                        <td><img src={student.photo} style={{ width: 60, height: 60 }} alt="Foto Mahasiswa" /></td>
                         <td>
                           <ButtonGroup>
-                            <Button className="btn-icon btn-2" color="info" type="button" onClick={() => this.props.history.push({ pathname: '/admin/lectures/edit/' + lecture._id })}>
+                            <Button className="btn-icon btn-2" color="info" type="button" onClick={() => this.props.history.push({ pathname: '/admin/students/edit/' + student._id })}>
                               <span className="btn-inner--icon">
                                 <i className="fas fa-pen" />
                               </span>
                             </Button>
-                            <Button className="btn-icon btn-2" color="danger" type="button" onClick={() => this.deleteLecture(lecture._id)}>
+                            <Button className="btn-icon btn-2" color="danger" type="button" onClick={() => this.deleteStudent(student._id)}>
                               <span className="btn-inner--icon">
                                 <i className="fas fa-trash" />
                               </span>
@@ -150,4 +150,4 @@ class Lecture extends Component {
   }
 }
 
-export default Lecture;
+export default Student;

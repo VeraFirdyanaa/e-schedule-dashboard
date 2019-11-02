@@ -37,6 +37,19 @@ import {
 
 class AdminNavbar extends React.Component {
 
+  state = {
+    user: null
+  }
+
+  componentWillMount() {
+    let user = localStorage.getItem('user');
+    if (user) {
+      this.setState({
+        user: JSON.parse(user)
+      });
+    }
+  }
+
   onLogout = () => {
     localStorage.clear();
     this.props.history.push('/auth/login');
@@ -77,7 +90,7 @@ class AdminNavbar extends React.Component {
                     </span>
                     <Media className="ml-2 d-none d-lg-block">
                       <span className="mb-0 text-sm font-weight-bold">
-                        Jessica Jones
+                        {this.state.user ? (this.state.user.role !== 'admin' ? this.state.user.name : 'Admin') : 'John Doe'}
                       </span>
                     </Media>
                   </Media>

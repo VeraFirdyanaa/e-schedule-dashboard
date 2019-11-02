@@ -25,6 +25,14 @@ import Icons from "views/examples/Icons.jsx";
 
 import Lecture from "views/Lecture/Lecture.jsx";
 import FormLecture from "./views/Lecture/FormLecture";
+import Student from "./views/Student/Student";
+import FormStudent from "./views/Student/FormStudent";
+import Major from "./views/Major/Major";
+import FormMajor from "./views/Major/FormMajor";
+import Course from "./views/Course/Course";
+import FormCourse from "./views/Course/FormCourse";
+import Kelas from "./views/Kelas/Kelas";
+import FormKelas from "./views/Kelas/FormKelas";
 
 var routes = [
   {
@@ -37,10 +45,31 @@ var routes = [
 
   // Student
   {
+    path: "/students/create",
+    name: "New Student",
+    component: FormStudent,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/students/edit/:id",
+    name: "Edit Student",
+    component: FormStudent,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/students/detail/:id",
+    name: "Detail Student",
+    component: FormStudent,
+    layout: "/admin",
+    child: true
+  },
+  {
     path: "/students",
     name: "Students",
     icon: "ni ni-hat-3 text-blue",
-    component: Index,
+    component: Student,
     layout: "/admin"
   },
 
@@ -74,6 +103,96 @@ var routes = [
     layout: "/admin",
   },
 
+  // Majors
+  {
+    path: "/majors/create",
+    name: "New Major",
+    component: FormMajor,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/majors/edit/:id",
+    name: "Edit Major",
+    component: FormMajor,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/majors/detail/:id",
+    name: "Detail Major",
+    component: FormMajor,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/majors",
+    name: "Majors",
+    icon: "fas fa-dharmachakra text-red",
+    component: Major,
+    layout: "/admin",
+  },
+
+  // Courses
+  {
+    path: "/courses/create",
+    name: "New Course",
+    component: FormCourse,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/courses/edit/:id",
+    name: "Edit Course",
+    component: FormCourse,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/courses/detail/:id",
+    name: "Detail Course",
+    component: FormCourse,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/courses",
+    name: "Courses",
+    icon: "fas fa-journal-whills text-yellow",
+    component: Course,
+    layout: "/admin",
+  },
+
+  // Kelass
+  {
+    path: "/kelass/create",
+    name: "New Kelas",
+    component: FormKelas,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/kelass/edit/:id",
+    name: "Edit Kelas",
+    component: FormKelas,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/kelass/detail/:id",
+    name: "Detail Kelas",
+    component: FormKelas,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/kelass",
+    name: "Kelas",
+    icon: "fas fa-users text-info",
+    component: Kelas,
+    layout: "/admin",
+  },
+
 
 
 
@@ -84,13 +203,13 @@ var routes = [
     component: Icons,
     layout: "/admin"
   },
-  {
-    path: "/maps",
-    name: "Maps",
-    icon: "ni ni-pin-3 text-orange",
-    component: Maps,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/maps",
+  //   name: "Maps",
+  //   icon: "ni ni-pin-3 text-orange",
+  //   component: Maps,
+  //   layout: "/admin"
+  // },
   {
     path: "/user-profile",
     name: "User Profile",
@@ -98,26 +217,27 @@ var routes = [
     component: Profile,
     layout: "/admin"
   },
-  {
-    path: "/tables",
-    name: "Tables",
-    icon: "ni ni-bullet-list-67 text-red",
-    component: Tables,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/tables",
+  //   name: "Tables",
+  //   icon: "ni ni-bullet-list-67 text-red",
+  //   component: Tables,
+  //   layout: "/admin"
+  // },
   {
     path: "/login",
     name: "Login",
     icon: "ni ni-key-25 text-info",
     component: Login,
-    layout: "/auth"
+    layout: "/auth",
+    child: true
   },
-  {
-    path: "/register",
-    name: "Register",
-    icon: "ni ni-circle-08 text-pink",
-    component: Register,
-    layout: "/auth"
-  }
+  // {
+  //   path: "/register",
+  //   name: "Register",
+  //   icon: "ni ni-circle-08 text-pink",
+  //   component: Register,
+  //   layout: "/auth"
+  // }
 ];
 export default routes;
