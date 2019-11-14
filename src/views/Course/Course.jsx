@@ -95,6 +95,8 @@ class Course extends Component {
                       <th scope="col">Kode Mata Kuliah</th>
                       <th scope="col">Nama Mata Kuliah</th>
                       <th scope="col">SKS</th>
+                      <th scope="col">Semester Kelas</th>
+                      <th scope="col">Semester</th>
                       <th scope="col">Status</th>
                       <th scope="col" />
                     </tr>
@@ -105,9 +107,16 @@ class Course extends Component {
                         <td>{course.code}</td>
                         <td>{course.name}</td>
                         <td>{course.sks}</td>
+                        <td>{course.angkaKelas}</td>
+                        <td style={{ textTransform: 'capitalize' }}>{course.semester}</td>
                         <td style={{ textTransform: 'capitalize', color: course.status === 'active' ? '#048535' : '#cf0202' }}>{course.status}</td>
                         <td>
                           <ButtonGroup>
+                            <Button className="btn-icon btn-2" color="default" type="button" onClick={() => this.props.history.push({ pathname: '/admin/courses/detail/' + course._id })}>
+                              <span className="btn-inner--icon">
+                                <i className="fas fa-eye" />
+                              </span>
+                            </Button>
                             <Button className="btn-icon btn-2" color="info" type="button" onClick={() => this.props.history.push({ pathname: '/admin/courses/edit/' + course._id })}>
                               <span className="btn-inner--icon">
                                 <i className="fas fa-pen" />

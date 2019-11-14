@@ -15,10 +15,10 @@ import Header from "components/Headers/Header.jsx";
 import API from '../../utils/Api';
 import PaginationComponent from "components/Pagination/PaginationComponent.jsx";
 
-class Kelas extends Component {
+class Schedule extends Component {
 
   state = {
-    kelass: [],
+    schedules: [],
     total: 0,
     totalPage: 1,
     perPage: 10,
@@ -27,15 +27,15 @@ class Kelas extends Component {
   }
 
   componentDidMount() {
-    this.getKelass();
+    this.getSchedules();
   }
 
-  getKelass = () => {
-    API.get(`api/kelass?page=${this.state.page}&limit=${this.state.perPage}`)
+  getSchedules = () => {
+    API.get(`api/schedules?page=${this.state.page}&limit=${this.state.perPage}`)
       .then(res => {
         let total_page = res.data.total / 10;
         this.setState({
-          kelass: res.data.kelass,
+          schedules: res.data.schedules,
           total: res.data.total,
           totalPage: Math.ceil(total_page)
         });
@@ -49,18 +49,18 @@ class Kelas extends Component {
     console.log('changing page', page);
     this.setState({
       page: page
-    }, () => this.getKelass())
+    }, () => this.getSchedules())
   }
 
-  deleteKelas = id => {
-    let answer = window.confirm('Are you sure want to delete this Kelas ?');
+  deleteSchedule = id => {
+    let answer = window.confirm('Are you sure want to delete this Schedule ?');
 
     if (answer) {
-      API.delete("api/kelass/" + id)
+      API.delete("api/schedules/" + id)
         .then(res => {
           console.log('res', res);
           alert('Data Berhasil Di Hapus')
-          this.getKelass();
+          this.getSchedules();
         })
         .catch(err => {
           console.log('err', err);
@@ -82,42 +82,41 @@ class Kelas extends Component {
                 <CardHeader className="border-0">
                   <Row className="align-items-center">
                     <div className="col">
-                      <h3 className="mb-0">Kelas List</h3>
+                      <h3 className="mb-0">Schedule List</h3>
                     </div>
                     <div className="col text-right">
-                      <Button size="sm" color="success" onClick={() => this.props.history.push('/admin/kelass/create')}>New <i className="fas fa-plus"></i></Button>
+                      <Button size="sm" color="success" onClick={() => this.props.history.push('/admin/schedules/create')}>New <i className="fas fa-plus"></i></Button>
                     </div>
                   </Row>
                 </CardHeader>
                 <Table className="align-items-center table-flush" responsive>
                   <thead className="thead-light">
                     <tr>
-                      <th scope="col">Kelas</th>
-                      <th scope="col">Jurusan</th>
-                      <th scope="col">Semester</th>
-                      <th scope="col">Angka Kelas</th>
-                      <th scope="col">Jenis Kelas</th>
-                      <th scope="col">Status</th>
+                      <th scope="col">Tahun Ajaran</th>
+                      <th scope="col">Sudah di Publikasi</th>
+                      <th scope="col">Status Persetujuan</th>
                       <th scope="col" />
                     </tr>
                   </thead>
                   <tbody>
-                    {this.state.kelass.map(kelas => (
-                      <tr key={kelas._id}>
-                        <td>{kelas.code}</td>
-                        <td>{kelas.major.name}</td>
-                        <td style={{ textTransform: 'capitalize' }}>{kelas.semester}</td>
-                        <td>{kelas.angkaKelas}</td>
-                        <td style={{ textTransform: 'capitalize' }}>{kelas.classType}</td>
-                        <td style={{ textTransform: 'capitalize', color: kelas.status === 'active' ? '#048535' : '#cf0202' }}>{kelas.status}</td>
+                    {this.state.schedules.map(schedule => (
+                      <tr key={schedule._id}>
+                        <td>{schedule.studyYear ? schedule.studyYear.code : '-'}</td>
+                        <td>{schedule.publish ? 'Ya' : 'Tidak'}</td>
+                        <td style={{ textTransform: 'capitalize' }}>{schedule.agreedSteps}</td>
                         <td>
                           <ButtonGroup>
-                            <Button className="btn-icon btn-2" color="info" type="button" onClick={() => this.props.history.push({ pathname: '/admin/kelass/edit/' + kelas._id })}>
+                            <Button className="btn-icon btn-2" color="default" type="button" onClick={() => this.props.history.push({ pathname: '/admin/schedules/detail/' + schedule._id })}>
+                              <span className="btn-inner--icon">
+                                <i className="fas fa-eye" />
+                              </span>
+                            </Button>
+                            {/* <Button className="btn-icon btn-2" color="info" type="button" onClick={() => this.props.history.push({ pathname: '/admin/schedules/edit/' + schedule._id })}>
                               <span className="btn-inner--icon">
                                 <i className="fas fa-pen" />
                               </span>
-                            </Button>
-                            <Button className="btn-icon btn-2" color="danger" type="button" onClick={() => this.deleteKelas(kelas._id)}>
+                            </Button> */}
+                            <Button className="btn-icon btn-2" color="danger" type="button" onClick={() => this.deleteSchedule(schedule._id)}>
                               <span className="btn-inner--icon">
                                 <i className="fas fa-trash" />
                               </span>
@@ -150,4 +149,4 @@ class Kelas extends Component {
   }
 }
 
-export default Kelas;
+export default Schedule;

@@ -33,6 +33,10 @@ import Course from "./views/Course/Course";
 import FormCourse from "./views/Course/FormCourse";
 import Kelas from "./views/Kelas/Kelas";
 import FormKelas from "./views/Kelas/FormKelas";
+import StudyYear from "./views/StudyYear/StudyYear";
+import FormStudyYear from "./views/StudyYear/FormStudyYear";
+import Schedule from "./views/Schedule/Schedule";
+import DetailSchedule from "./views/Schedule/DetailSchedule";
 
 var routes = [
   {
@@ -193,7 +197,51 @@ var routes = [
     layout: "/admin",
   },
 
+  // StudyYears
+  {
+    path: "/studyYears/create",
+    name: "New StudyYear",
+    component: FormStudyYear,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/studyYears/edit/:id",
+    name: "Edit StudyYear",
+    component: FormStudyYear,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/studyYears/detail/:id",
+    name: "Detail StudyYear",
+    component: FormStudyYear,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/studyYears",
+    name: "Study Years",
+    icon: "fas fa-archway text-danger",
+    component: StudyYear,
+    layout: "/admin",
+  },
 
+  // Schedules
+  {
+    path: "/schedules/detail/:id",
+    name: "Detail Schedule",
+    component: DetailSchedule,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/schedules",
+    name: "Schedules",
+    icon: "fas fa-calendar text-danger",
+    component: Schedule,
+    layout: "/admin",
+  },
 
 
   {

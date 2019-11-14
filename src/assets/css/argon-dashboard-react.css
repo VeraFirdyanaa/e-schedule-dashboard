@@ -13226,3 +13226,7 @@ button:focus, :focus {
 
 .table .badge i {
   margin-right: 10px; }
+
+.cliced-row:hover {
+  font-weight: 'bold';
+}

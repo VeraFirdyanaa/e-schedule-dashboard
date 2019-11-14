@@ -23,6 +23,9 @@ class FormKelas extends Component {
     code: '',
     major: '',
     status: '',
+    semester: '',
+    angkaKelas: 0,
+    classType: '',
     majors: [],
     isEdit: false,
     id: null,
@@ -41,7 +44,10 @@ class FormKelas extends Component {
             this.setState({
               code: res.data.code,
               major: res.data.major,
-              status: res.data.status
+              status: res.data.status,
+              semester: res.data.semester,
+              angkaKelas: res.data.angkaKelas,
+              classType: res.data.classType
             })
           })
           .catch(err => {
@@ -86,7 +92,10 @@ class FormKelas extends Component {
           API.post("api/kelass", {
             code: this.state.code,
             major: this.state.major,
-            status: this.state.status
+            status: this.state.status,
+            semester: this.state.semester,
+            angkaKelas: this.state.angkaKelas,
+            classType: this.state.classType
           })
             .then(res => {
               this.setState({
@@ -107,7 +116,10 @@ class FormKelas extends Component {
           API.put("api/kelass/" + this.state.id, {
             code: this.state.code,
             major: this.state.major,
-            status: this.state.status
+            status: this.state.status,
+            semester: this.state.semester,
+            angkaKelas: this.state.angkaKelas,
+            classType: this.state.classType
           })
             .then(res => {
               this.setState({
@@ -156,6 +168,33 @@ class FormKelas extends Component {
                           this.state.majors.map(major => <option key={major._id} value={major._id}>{major.level} - {major.name}</option>)
                         }
                         {/* <option value="active">Aktif</option> */}
+                      </Input>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row style={{ marginLeft: 10 }}>
+                    <Label htmlFor="angkaKelas" md={2}>Angka Kelas</Label>
+                    <Col md={9}>
+                      <Input type="number" placeholder="Angka Kelas" name="angkaKelas" onChange={this.handleChange} value={this.state.angkaKelas} />
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row style={{ marginLeft: 10 }}>
+                    <Label htmlFor="classType" md={2}>Jenis Kelas</Label>
+                    <Col md={9}>
+                      <Input type="select" name="classType" placeholder="Jenis Kelas" onChange={this.handleChange} value={this.state.classType}>
+                        <option>------- Pilih Jenis Kelas -------</option>
+                        <option value="reguler">Reguler Pagi</option>
+                        <option value="malam">Reguler Malam</option>
+                        <option value="ekstension">Ekstension</option>
+                      </Input>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row style={{ marginLeft: 10 }}>
+                    <Label htmlFor="semester" md={2}>Semester</Label>
+                    <Col md={9}>
+                      <Input type="select" name="semester" placeholder="Semester" onChange={this.handleChange} value={this.state.semester}>
+                        <option>------- Pilih Semester -------</option>
+                        <option value="ganjil">Ganjil</option>
+                        <option value="genap">Genap</option>
                       </Input>
                     </Col>
                   </FormGroup>
