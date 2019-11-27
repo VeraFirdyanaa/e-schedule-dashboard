@@ -37,6 +37,8 @@ import StudyYear from "./views/StudyYear/StudyYear";
 import FormStudyYear from "./views/StudyYear/FormStudyYear";
 import Schedule from "./views/Schedule/Schedule";
 import DetailSchedule from "./views/Schedule/DetailSchedule";
+import Room from "./views/Room/Room";
+import FormRoom from "./views/Room/FormRoom";
 
 var routes = [
   {
@@ -224,6 +226,29 @@ var routes = [
     name: "Study Years",
     icon: "fas fa-archway text-danger",
     component: StudyYear,
+    layout: "/admin",
+  },
+
+  // Rooms
+  {
+    path: "/rooms/create",
+    name: "New Room",
+    component: FormRoom,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/rooms/edit/:id",
+    name: "Edit Room",
+    component: FormRoom,
+    layout: "/admin",
+    child: true
+  },
+  {
+    path: "/rooms",
+    name: "Rooms",
+    icon: "fas fa-door-open text-yellow",
+    component: Room,
     layout: "/admin",
   },
 

@@ -39,7 +39,8 @@ class FormStudyYear extends Component {
     scheduleUrl: null,
     scheduleId: null,
     endTeachingPlan: null,
-    results: null
+    results: null,
+    endTP: null
   }
 
   componentWillMount() {
@@ -179,26 +180,45 @@ class FormStudyYear extends Component {
     console.log('starting Automation ...');
     let ans = window.confirm('Apakah kamu yakin ingin Memulai Penjadawalan ?');
     if (ans) {
-      API.post(`/api/studyYears/automation?scheduler=${automationType}&id=${studyYearId}`, {
-        endTeachingPlan: this.state.stage === 'init' ? this.state.endTeachingPlan : null
-      })
-        .then(res => {
+      if (automationType === 'notified') {
+        API.post(`/api/broadcasts`, {
+          studyYear: studyYearId,
+          end: this.state.endTeachingPlan,
+          status: 'started'
+        }).then(res => {
           console.log('res', res);
           this.getDetail();
-          if (res && res.data && res.data.message) {
-            alert(res.data.message);
-          } else {
-            alert('Berhasil Memulai Penjadwalan!');
-          }
-        })
-        .catch(err => {
+          alert('Berhasil Memulai Teaching Plan');
+        }).catch(err => {
           let response = err.response;
           if (response && response.data && response.data.message) {
             alert(response.data.message);
           } else {
             alert('Error to Start Automation!');
           }
-        });
+        })
+      } else {
+        API.post(`/api/studyYears/automation?scheduler=${automationType}&id=${studyYearId}`, {
+          endTeachingPlan: this.state.stage === 'init' ? this.state.endTeachingPlan : null
+        })
+          .then(res => {
+            console.log('res', res);
+            this.getDetail();
+            if (res && res.data && res.data.message) {
+              alert(res.data.message);
+            } else {
+              alert('Berhasil Memulai Penjadwalan!');
+            }
+          })
+          .catch(err => {
+            let response = err.response;
+            if (response && response.data && response.data.message) {
+              alert(response.data.message);
+            } else {
+              alert('Error to Start Automation!');
+            }
+          });
+      }
     }
   }
 
@@ -266,6 +286,9 @@ class FormStudyYear extends Component {
   }
 
   render() {
+    var validation = (currentDate) => {
+      return currentDate.isAfter(moment(new Date()));
+    };
     return (
       <>
         <Header noStats={true} />
@@ -353,6 +376,7 @@ class FormStudyYear extends Component {
                                   timeFormat={false}
                                   onChange={this.handleDateChange}
                                   value={this.state.endTeachingPlan}
+                                  isValidDate={validation}
                                 />
                               </InputGroup>
                             </Col>

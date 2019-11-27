@@ -10,11 +10,13 @@ import {
   FormGroup,
   Label,
   Input,
-  Col
+  Col,
+  ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText
 } from "reactstrap";
 
 import Header from "components/Headers/Header.jsx";
 import API from '../../utils/Api';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 class FormCourse extends Component {
 
@@ -28,7 +30,12 @@ class FormCourse extends Component {
     isEdit: false,
     isDetail: false,
     id: null,
-    submitting: false
+    submitting: false,
+    search: '',
+    searching: false,
+    searchResult: [],
+    lectures: [],
+    jenisPembelajaran: ''
   }
 
   componentWillMount() {
@@ -48,7 +55,9 @@ class FormCourse extends Component {
               sks: res.data.sks,
               semester: res.data.semester,
               status: res.data.status,
-              angkaKelas: res.data.angkaKelas
+              angkaKelas: res.data.angkaKelas,
+              lectures: res.data.lectures || [],
+              jenisPembelajaran: res.data.jenisPembelajaran
             })
           })
           .catch(err => {
@@ -71,14 +80,16 @@ class FormCourse extends Component {
       this.setState({
         submitting: true
       }, () => {
-        if (!this.state.isEdit) {
+        if (!this.state.isEdit && !this.state.isDetail) {
           API.post("api/courses", {
             code: this.state.code,
             name: this.state.name,
             sks: this.state.sks,
             semester: this.state.semester,
             status: this.state.status,
-            angkaKelas: this.state.angkaKelas
+            angkaKelas: this.state.angkaKelas,
+            lectures: [],
+            jenisPembelajaran: this.state.jenisPembelajaran
           })
             .then(res => {
               this.setState({
@@ -102,7 +113,9 @@ class FormCourse extends Component {
             sks: this.state.sks,
             semester: this.state.semester,
             status: this.state.status,
-            angkaKelas: this.state.angkaKelas
+            angkaKelas: this.state.angkaKelas,
+            lectures: this.state.lectures.map(lecture => lecture._id),
+            jenisPembelajaran: this.state.jenisPembelajaran
           })
             .then(res => {
               this.setState({
@@ -123,6 +136,35 @@ class FormCourse extends Component {
       })
     }
   }
+
+  onLectureSearchChange = async e => {
+    this.setState({ search: e.target.value, searchResult: [], searching: true });
+    let debounceSearch = AwesomeDebouncePromise(this.getLectures, 500);
+    let results = await debounceSearch();
+    console.log('results', results);
+    this.setState({ searchResult: results ? results.data : [], searching: false });
+  }
+
+  getLectures = () => API.get(`/api/lectures/search?search=${this.state.search}`);
+
+  onAddLecture = lecture => {
+    let lectures = [...this.state.lectures];
+    let indexFound = lectures.findIndex(lc => lc._id === lecture._id);
+    if (indexFound > -1) {
+      alert('Dosen yang dipilih sudah berada dalam list dosen terpilih!');
+    } else {
+      lectures.push(lecture);
+    }
+
+    this.setState({ lectures, searchResult: [], search: '' });
+  }
+
+  onRemoveLecture = index => {
+    let lectures = [...this.state.lectures];
+    lectures.splice(index, 1);
+    this.setState({ lectures });
+  }
+
 
   render() {
     let semesterOptions = [];
@@ -148,7 +190,7 @@ class FormCourse extends Component {
             <div className="col">
               <Card className="shadow">
                 <CardHeader className="border-0">
-                  <h3 className="mb-0">{this.state.isEdit ? 'Edit' : 'New'} Course</h3>
+                  <h3 className="mb-0">{this.state.isEdit ? 'Edit' : (this.state.isDetail ? 'Detail' : 'New')} Course</h3>
                 </CardHeader>
                 <Form>
                   <FormGroup row style={{ marginLeft: 10 }}>
@@ -191,6 +233,16 @@ class FormCourse extends Component {
                     </Col>
                   </FormGroup>
                   <FormGroup row style={{ marginLeft: 10 }}>
+                    <Label htmlFor="jenisPembelajaran" md={2}>Jenis Pembelajaran</Label>
+                    <Col md={9}>
+                      <Input type="select" name="jenisPembelajaran" placeholder="Semester (Ganjil/Genap)" onChange={this.handleChange} value={this.state.jenisPembelajaran} disabled={this.state.isDetail}>
+                        <option>------- Pilih Jenis Pembelajaran -------</option>
+                        <option value="teori">Teori</option>
+                        <option value="praktikum">Praktikum</option>
+                      </Input>
+                    </Col>
+                  </FormGroup>
+                  <FormGroup row style={{ marginLeft: 10 }}>
                     <Label htmlFor="status" md={2}>Status</Label>
                     <Col md={9}>
                       <Input type="select" name="status" placeholder="Status" onChange={this.handleChange} value={this.state.status} disabled={this.state.isDetail}>
@@ -207,6 +259,60 @@ class FormCourse extends Component {
                       </Col>
                     </FormGroup>
                   ) : null}
+                  {
+                    this.state.isDetail ? (
+                      <>
+                        <FormGroup row style={{ marginLeft: 10 }}>
+                          <Label md={2}>Dosen Terpilih</Label>
+                          <Col md={9} style={{ marginTop: 5 }}>
+                            {
+                              this.state.lectures.length > 0 ? this.state.lectures.map((lecture, index) => (
+                                <ListGroup key={lecture._id} style={{ marginBottom: 10 }}>
+                                  <ListGroupItem>
+                                    <ListGroupItemHeading>NOMOR INDUK DOSEN: {lecture.nid}</ListGroupItemHeading>
+                                    <ListGroupItemText>
+                                      NAMA DOSEN: {lecture.name}
+                                    </ListGroupItemText>
+                                    <Button color="danger" type="button" onClick={() => this.onRemoveLecture(index)}>Hapus</Button>
+                                  </ListGroupItem>
+                                </ListGroup>
+                              )) : (
+                                  <div>
+                                    <p>Belum ada Dosen terpilih untuk Mata Kuliah Ini</p>
+                                  </div>
+                                )
+                            }
+                          </Col>
+                        </FormGroup>
+                        <FormGroup row style={{ marginLeft: 10 }}>
+                          <Label md={2}>Tambah Dosen</Label>
+                          <Col md={6}>
+                            <Input type="text" placeholder="Cari Nama Atau Nomor Induk Dosen" name="search" onChange={this.onLectureSearchChange} value={this.state.search} />
+                            {
+                              this.state.searchResult.length > 0 && (this.state.search && this.state.search !== 0) ? this.state.searchResult.map(lecture => (
+                                <ListGroup key={lecture._id} style={{ marginTop: 20 }}>
+                                  <ListGroupItem>
+                                    <ListGroupItemHeading>NOMOR INDUK DOSEN: {lecture.nid}</ListGroupItemHeading>
+                                    <ListGroupItemText>
+                                      NAMA DOSEN: {lecture.name}
+                                    </ListGroupItemText>
+                                    <Button color="success" type="button" onClick={() => this.onAddLecture(lecture)}>Tambahkan</Button>
+                                  </ListGroupItem>
+                                </ListGroup>
+                              )) : this.state.search && this.state.search.length > 0 && !this.state.searching ? (
+                                <p className="text-center" style={{ marginTop: 10 }}>Dosen Tidak Ditemukan dengan Nama atau Nomor Induk &ldquo;<span style={{ fontWeight: 'bold' }}>{this.state.search}</span>&rdquo;</p>
+                              ) : null
+                            }
+                          </Col>
+                        </FormGroup>
+                        <FormGroup>
+                          <Col md={{ size: 9, offset: 2 }}>
+                            <Button color="info" onClick={this.onSave} disabled={this.state.submitting}><i className="fas fa-save"></i>&nbsp;Simpan Dosen Terpilih</Button>
+                          </Col>
+                        </FormGroup>
+                      </>
+                    ) : null
+                  }
                 </Form>
               </Card>
             </div>
