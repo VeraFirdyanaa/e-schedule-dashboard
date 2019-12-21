@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.0.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import { Link } from "react-router-dom";
 // reactstrap components
@@ -67,7 +50,7 @@ class AdminNavbar extends React.Component {
         >
           <Container className="px-4">
             <NavbarBrand to="/" tag={Link}>
-              <img alt="..." src={require("assets/img/brand/argon-react-white.png")} />
+            <img style={{ width:130, height:130, marginTop: 50 }} alt="..." src={require("assets/img/brand/Logo-STMIK-BaniSaleh.jpg")} />
             </NavbarBrand>
             <button className="navbar-toggler" id="navbar-collapse-main">
               <span className="navbar-toggler-icon" />
@@ -96,7 +79,7 @@ class AdminNavbar extends React.Component {
               </div>
               <Nav className="ml-auto" navbar>
                 {dashboardNav}
-                <NavItem>
+                {/* <NavItem>
                   <NavLink
                     className="nav-link-icon"
                     to="/auth/login"
@@ -105,7 +88,7 @@ class AdminNavbar extends React.Component {
                     <i className="ni ni-key-25" />
                     <span className="nav-link-inner--text">Login</span>
                   </NavLink>
-                </NavItem>
+                </NavItem> */}
                 {profileNav}
               </Nav>
             </UncontrolledCollapse>
