@@ -60,17 +60,17 @@ class Login extends React.Component {
           <Card className="bg-secondary shadow border-0">
             <CardBody className="px-lg-5 py-lg-5">
               <div className="text-center text-muted mb-4">
-                <small style={{ fontWeight: 'bold', fontSize: 20, fontFamily:'Sans-serif' }}>Login</small>
+                <small style={{ fontWeight: 'bold', fontSize: 20, fontFamily:'Sans-serif'}}>Login</small>
               </div>
-              <Form role="form">
-                <FormGroup className="mb-3">
+              <Form role="form" style={{ marginTop: 50 }}>
+                <FormGroup className="mb-4">
                   <InputGroup className="input-group-alternative">
-                    <InputGroupAddon addonType="prepend">
+                    <InputGroupAddon addonType="prepend" >
                       <InputGroupText>
                         <i className="ni ni-email-83" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Email" type="email" name="email" onChange={this.handleChange} />
+                    <Input placeholder="Masukan Email anda" type="email" name="email" onChange={this.handleChange} style={{ paddingLeft : 10}} />
                   </InputGroup>
                 </FormGroup>
                 <FormGroup>
@@ -80,41 +80,17 @@ class Login extends React.Component {
                         <i className="ni ni-lock-circle-open" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input placeholder="Password" type="password" name="password" onChange={this.handleChange} />
+                    <Input placeholder="Masukan Password anda" type="password" name="password" onChange={this.handleChange} style={{ paddingLeft : 10}} />
                   </InputGroup>
                 </FormGroup>
-                <div className="custom-control custom-control-alternative custom-checkbox">
-                  <input
-                    className="custom-control-input"
-                    id=" customCheckLogin"
-                    type="checkbox"
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor=" customCheckLogin"
-                  >
-                    <span className="text-muted">Remember me</span>
-                  </label>
-                </div>
                 <div className="text-center">
-                  <Button className="my-4" color="primary" type="button" onClick={this.onLogin}>
+                  <Button className="my-5" color="primary" type="button" onClick={this.onLogin}>
                     Sign in
                   </Button>
                 </div>
               </Form>
             </CardBody>
           </Card>
-          <Row className="mt-3">
-            <Col xs="6">
-              <a
-                className="text-light"
-                href="#pablo"
-                onClick={e => e.preventDefault()}
-              >
-                <small>Forgot password?</small>
-              </a>
-            </Col>
-          </Row>
         </Col>
       </>
     );
