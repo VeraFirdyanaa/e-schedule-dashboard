@@ -20,7 +20,6 @@ import {
 import Header from "components/Headers/Header.jsx";
 import API from '../../utils/Api';
 import ReactDatetime from 'react-datetime';
-import ImageUploader from 'react-images-upload';
 import moment from 'moment';
 
 class FormStudent extends Component {
@@ -34,8 +33,6 @@ class FormStudent extends Component {
     gender: '',
     email: '',
     password: '',
-    photo: null,
-    photoSelected: false,
     isEdit: false,
     id: null,
     submitting: false
@@ -76,32 +73,6 @@ class FormStudent extends Component {
     this.setState({
       dob: new Date(e)
     })
-  }
-
-  onDrop = picture => {
-    console.log('pricture', picture);
-    this.setState({
-      photoSelected: true
-    });
-    let fd = new FormData();
-    fd.append('file', picture[0]);
-    fd.append('upload_preset', 'bansal_scheduler');
-    fetch("https://api.cloudinary.com/v1_1/dat7joee/image/upload", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      body: fd
-    })
-      .then(res => {
-        console.log('res', res);
-        this.setState({
-          photo: res.data.url
-        });
-      })
-      .catch(err => {
-        console.log('err', err);
-      });
   }
 
   onSave = e => {
@@ -164,16 +135,7 @@ class FormStudent extends Component {
   }
 
   render() {
-    let photoMahasiswa = null;
-
-    if (this.state.photoSelected && !this.state.photo) {
-      photoMahasiswa = <Spinner type="grow" color="danger" />
-    }
-
-    if (this.state.photoSelected && this.state.photo) {
-      photoMahasiswa = <img src={this.state.photo} alt="Foto Mahasiswa" style={{ width: 100, height: 100 }} />
-    }
-
+    
     return (
       <>
         <Header noStats={true} />
@@ -194,13 +156,13 @@ class FormStudent extends Component {
                   <FormGroup row style={{ marginLeft: 10 }}>
                     <Label htmlFor="name" md={2}>Name</Label>
                     <Col md={9}>
-                      <Input type="text" placeholder="Nama Mahasiswa" name="name" onChange={this.handleChange} value={this.state.name} />
+                      <Input type="text" placeholder="Student Name" name="name" onChange={this.handleChange} value={this.state.name} />
                     </Col>
                   </FormGroup>
                   <FormGroup row style={{ marginLeft: 10 }}>
                     <Label htmlFor="name" md={2}>Place of Birth</Label>
                     <Col md={9}>
-                      <Input type="text" placeholder="Tempat Lahir" name="pob" onChange={this.handleChange} value={this.state.pob} />
+                      <Input type="text" placeholder="Place of birth" name="pob" onChange={this.handleChange} value={this.state.pob} />
                     </Col>
                   </FormGroup>
                   <FormGroup row style={{ marginLeft: 10 }}>
@@ -227,33 +189,15 @@ class FormStudent extends Component {
                     <Label htmlFor="gender" md={2}>Gender</Label>
                     <Col md={9}>
                       <Input type="select" name="gender" placeholder="Jenis Kelamin" onChange={this.handleChange} value={this.state.gender}>
-                        <option>------- Pilih Jenis Kelamin -------</option>
-                        <option value="pria">Pria</option>
-                        <option value="wanita">Wanita</option>
+                        <option>------- Choose Gender -------</option>
+                        <option value="pria">Male</option>
+                        <option value="wanita">Female</option>
                       </Input>
                     </Col>
                   </FormGroup>
                   {
                     this.state.isEdit ? null : (
                       <Fragment>
-                        <FormGroup row style={{ marginLeft: 10 }}>
-                          <Label htmlFor="name" md={2}>Photo</Label>
-                          <Col md={9}>
-                            {
-                              this.state.photoSelected ? (
-                                <div>{photoMahasiswa}</div>
-                              ) : (
-                                  < ImageUploader
-                                    withIcon={true}
-                                    buttonText='Choose images'
-                                    onChange={this.onDrop}
-                                    imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                                    maxFileSize={5242880}
-                                    singleImage={true}
-                                  />)
-                            }
-                          </Col>
-                        </FormGroup>
                         <FormGroup row style={{ marginLeft: 10 }}>
                           <Label htmlFor="email" md={2}>Email</Label>
                           <Col md={9}>

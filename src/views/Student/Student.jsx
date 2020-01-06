@@ -97,8 +97,7 @@ class Student extends Component {
                       <th scope="col">Date Of Birth</th>
                       <th scope="col">Place of Birth</th>
                       <th scope="col">Gender</th>
-                      <th scope="col">Photo</th>
-                      <th scope="col" />
+                     
                     </tr>
                   </thead>
                   <tbody>
